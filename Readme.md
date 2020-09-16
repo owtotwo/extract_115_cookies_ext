@@ -4,10 +4,16 @@
 
 *配合[Offline-115](https://github.com/owtotwo/Offline-115)使用*
 
-## Install
+## Install by CRX File（仅限115浏览器）
+1. 在[release](https://github.com/owtotwo/extract_115_cookies_ext/releases)页面中下载最新版本crx文件
+2. 在115浏览器打开选项->扩展中心，并拖动crx文件到扩展中心页面中，添加即可
+
+
+## Install by Souce Code
 1. `$ git clone https://github.com/owtotwo/extract_115_cookies_ext.git`
 2. 打开chrome浏览器/115浏览器，打开插件页面，开启开发者模式，点击“加载已解压的扩展程序”，选择
 `extract_115_cookies_ext`文件夹，即可使用。
+
 
 ## Usage
 在115.com网站登录后，将自动检查登录状态，成功后自动弹出cookie下载框。
