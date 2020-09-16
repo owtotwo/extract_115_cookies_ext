@@ -1,11 +1,10 @@
 {
     "name": "提取115.com的Cookies",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "owtotwo",
     "description": "登录115时自动保存cookies",
     "permissions": [
         "contextMenus",
-        "storage",
         "cookies",
         "downloads",
         "*://*.115.com/"

@@ -1,15 +1,23 @@
 // 115 browser extension by owtotwo
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.local.set({ cookieUID: null, cookieCID: null, cookieSEID: null }, () => {
-        console.log('115 Cookies UID, CID, SEID are initialized to null.');
-    });
-});
-
 const cookie_has_changed = { UID: false, CID: false, SEID: false };
 
+function is115Login(callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText);
+            if (res.state === true) {
+                callback(true);
+            }
+        }
+        callback(false);
+    };
+    xhr.open('GET', 'https://my.115.com/?ct=guide&ac=status', true);
+    xhr.send();
+}
+
 function save115Cookies() {
-    let cookiesString = '// Save by 115 extension\n';
+    let cookiesString = '// Save by chromium-like browser extension\n';
     chrome.cookies.getAll({ url: 'https://115.com' }, (cookies) => {
         cookies.forEach((cookie) => {
             cookiesString += `${cookie.name}=${cookie.value};`
@@ -28,7 +36,6 @@ function save115Cookies() {
 
 chrome.cookies.onChanged.addListener((changeInfo) => {
     if (changeInfo.removed === false && changeInfo.cookie.domain === '.115.com') {
-        console.log('[115ext][onChanged]', changeInfo);
         const cookie = changeInfo.cookie;
         if ([ 'UID', 'CID', 'SEID' ].includes(cookie.name)) {
             console.log('[115ext][onChanged][need]', cookie.name);
@@ -48,11 +55,13 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
             if (cookie_has_changed.UID && cookie_has_changed.CID && cookie_has_changed.SEID) {
                 cookie_has_changed.UID = cookie_has_changed.CID = cookie_has_changed.SEID = false; // reset
                 // Now Just Login
-                save115Cookies();
+                is115Login((isLogin) => {
+                    if (isLogin) {
+                        console.log(`[115ext][onChanged] is 115 logined?`, isLogin);
+                        save115Cookies();
+                    }
+                });
             }
-            chrome.storage.local.set(data, () => {
-                console.log(`115 Cookies ${cookie.name} is set to ${cookie.value}.`);
-            });
         }
     }
 });
@@ -61,9 +70,16 @@ chrome.contextMenus.create({
     title: 'Save 115 Cookies',
     visible: true,
     onclick: (info, tab) => {
-        console.log(`[contextMenus] info`, info);
-        console.log(`[contextMenus] tab`, tab);
-        save115Cookies();
+        is115Login((isLogin) => {
+            if (isLogin) {
+                console.log(`[contextMenus] is 115 logined?`, isLogin);
+                save115Cookies();
+            }
+        });
     },
-    enabled: true
+    enabled: true,
+    documentUrlPatterns: [
+        'http://*.115.com/*',
+        'https://*.115.com/*',
+    ]
 });
