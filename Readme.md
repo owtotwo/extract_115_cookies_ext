@@ -4,6 +4,11 @@
 
 *配合[Offline-115](https://github.com/owtotwo/Offline-115)使用*
 
+## Install
+1. `$ git clone https://github.com/owtotwo/extract_115_cookies_ext.git`
+2. 打开chrome浏览器/115浏览器，打开插件页面，开启开发者模式，点击“加载已解压的扩展程序”，选择
+`extract_115_cookies_ext`文件夹，即可使用。
+
 ## Usage
 在115.com网站登录后，将自动检查登录状态，成功后自动弹出cookie下载框。
 
